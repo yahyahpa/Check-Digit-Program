@@ -1,0 +1,144 @@
+#Jlong
+
+
+
+
+assignment = input('Enter Assignment Code ===>').upper()
+
+#Dictionary containing A-E numeric value
+char_value = {'A':10,
+              'B':11,
+              'C':12,
+              'D':13,
+              'E':14,
+              'F':15}
+#first character classes
+first_classes = {'A':'CS101',
+                 'B':'CS191',
+                 'C':'CS201',
+                 'D':'CS291'}
+#second character class
+second_classes = {'A':'Test',
+                  'B':'Program',
+                  'C':'Quiz',
+                  'D':'Final',
+                  'E':'Other'}
+
+assignment_sum = 0
+
+#If input for assignment is ever empty, quit, else run checks.
+def check_manager():
+    global assignment_sum
+    #reset assignment_sum every new input
+    assignment_sum = 0
+    if assignment == '':
+        quit()
+    else:
+        #cc aberivated for character check
+        first_cc()
+        second_cc()
+        length_cc()
+        string_check()
+        find_sum()
+        check_digit()
+        print_results()
+        
+#check string to make sure it has all valid input (A-F or 0-9)
+def string_check():
+    global assignment
+    incorrect_char_list = []
+    #for chracter in input assignment
+    for i in assignment:
+        #if the character is not a numeric character
+        if i.isdigit() == False:
+            #if the character is not a letter between A'F
+            if i not in char_value:
+                #add character to incorrect list for later output
+                incorrect_char_list.append(i)
+    if len(incorrect_char_list) != 0:
+        print('Inputed Assignment contains invalid character', incorrect_char_list)
+        print()
+        assignment = input('Enter Assignment Code ===>').upper()      
+        check_manager()
+        
+def print_results():
+    global assignment
+    print('Assignment %s is for class %s, and is a %s'% (assignment, first_classes[assignment[0]],second_classes[assignment[1]])) 
+    assignment = input('Enter Assignment Code ===>').upper()
+    print()
+    check_manager()
+    
+def find_sum():
+    #finds sum of assignment value x index
+    global assignment_sum
+    #index checked value asigns weight to character position
+    index_checked= 0
+    #sum up only first 12 characters
+    for i in assignment[:12]:
+        if i.isdigit()== False:
+            ##char_value dictionary contains vaules for A-E
+            assignment_sum += (char_value[i]* index_checked)
+            index_checked += 1
+        elif i.isdigit() == True:
+            assignment_sum += (int(i)*index_checked)
+            index_checked += 1
+    return assignment_sum
+
+def check_digit():
+    #Modulus 10 on sum and compare to final digit to check digit if string is valid
+    global assignment_sum
+    global assignment
+    if assignment_sum %10 == int(assignment[12]):
+        print('\nThe value entered was correct.\n')
+    elif not assignment_sum %10 == int(assignment[12]):
+        print('\nIncorrect value, Check digit doesn\'t match modulus 10 of sum\n')
+        assignment = input('Enter Assignment Code ===>').upper()      
+        check_manager()
+        
+
+#First Character Check
+def first_cc():
+    global assignment
+    ###First Character Check
+    try:
+        #if assignment started with incorrect character ask for correct assignment again
+        while not assignment.startswith(('A','B','C','D')):
+            raise ValueError ('Incorrect, the first character must be between A-D')
+    except ValueError as error:
+        print(error)
+        print()
+        assignment = input('Enter Assignment Code ===>').upper()
+        check_manager()
+
+#Second Character Check
+def second_cc():
+    global assignment
+    ###Second Character Check
+    try:
+        #slice assignment so startswith can check second character
+        assignment_2cc = assignment[1:]
+        while not assignment_2cc.startswith(('A','B','C','D','E')):
+            raise ValueError('Incorrect, the second character must be between A-E')
+    except ValueError as error:
+        print(error)
+        print()
+        assignment = input('Enter Assignment Code ===>').upper()
+        check_manager()
+        
+#Length character check of assignment
+def length_cc():
+    global assignment
+    ###Makes sure the input is exactly 13 characters long
+    try:
+        while len(assignment) != 13:
+            raise ValueError ('Incorrect, the assignment must be 13 characters long.')
+    except ValueError as error:
+        print(error)
+        print()
+        assignment = input('Enter Assignment Code ===>').upper()
+        check_manager()
+
+
+
+#call check manager
+check_manager()
